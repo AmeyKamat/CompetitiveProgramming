@@ -9,8 +9,7 @@ handle_error() {
 trap ctrl_c INT
 
 function ctrl_c() {
-    kill $(ps aux | grep -i "vim ./test.tx[t]" | awk {'print $2'} ORS=' ')
-    kill $(ps aux | grep -i "vim ./${FOLDER}/${PROGRAM}.cp[p]" | awk {'print $2'} ORS=' ')
+    kill $(ps aux | grep -i "atom ./$FOLDER/$PROGRAM.cp[p] ./test.tx[t]" | awk {'print $2'} ORS=' ') 2>/dev/null
     exit 0;
 }
 
@@ -35,10 +34,7 @@ if [ ! -f "$TEST" ]; then
     handle_error $?
 fi
 
-x-terminal-emulator -e vim $PROGRAM_PATH
-handle_error $?
-x-terminal-emulator -e vim $TEST
-handle_error $?
+atom $PROGRAM_PATH $TEST
 
 LPTIME=`stat -c %Z $PROGRAM_PATH`
 LTTIME=`stat -c %Z $TEST`
@@ -80,8 +76,8 @@ do
             start=`date +%s.%N`
             ./a.out < $TEST 2>&1
             end=`date +%s.%N`
-            runtime=$((end-start))
-            echo "execution time: " $runtime
+            #runtime=$(end-start)
+            #echo "execution time: " $runtime
         else
             echo "cannot run code. binary not found."
         fi
